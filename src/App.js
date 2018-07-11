@@ -2,60 +2,71 @@ import React, { Component } from 'react';
 import './bootstrap.min.css';
 import Header from './common/components/Header';
 import Item from './common/components/Item';
-// import Banner from './common/components/Banner';
+import CartContainer from './common/components/CartContainer';
+import products from './common/components/data/products';
+
+
 class App extends Component {
 
   state = {
-    items: [
-      {
-        product: 'A',
-        id: 1,
-        photo: 'https://ucarecdn.com/b067b087-f830-47d1-aa58-307003539ee4/'
-      },
-      {
-        product: 'B',
-        id: 2
-      },
-      {
-        product: 'C',
-        id: 3
-      },
-      {
-        product: 'C',
-        id: 4
-      },
-      {
-        product: 'D',
-        id: 5
-      },
-      {
-        product: 'E',
-        id: 4
-      }
-    ]
+    cart: []
+  }
+
+  onAddCart = (item) => (e) => {
+    const isExist = this.state.cart.find(fItem => {
+      return fItem.id === item.id;
+    })
+    if(!isExist) {
+      this.setState({
+        cart: this.state.cart.concat(item)
+      })
+    }
+  }
+
+  onRemoveCart = (item) => (e) => {
+    if(window.confirm(`Are you sure you want to delete ${item.product}?`)) {
+      this.setState({
+        cart: this.state.cart.filter(fItem => {
+          return fItem.id !== item.id;
+        })
+      })
+    }
+  }
+
+  renderProduct = (products) => {
+    try {
+      return products.map(product => {
+        return (
+          <Item 
+            onAddCart={ this.onAddCart(product) }
+            data={product}
+            key={`item1-${product.id}`}/>
+        )
+      })
+    } catch(error) {
+      console.log(error);
+      return (
+        <div>Unable to render products. Error 500</div>
+      )
+    }
+    
   }
 
   render() {
+
     return (
 
        <div>
-        <Header title="Album"/>
+        <Header title="Album" cartCount={this.state.cart.length}/>
         <main role="main">
-          {/*<Banner/>*/}
+          <CartContainer 
+            cart={this.state.cart} 
+            onRemoveCart={this.onRemoveCart}
+            />
           <div className="album py-5 bg-light">
             <div className="container">
               <div className="row">
-                {
-                  this.state.items.map(a => {
-                    return (
-                      <Item 
-                        photo={a.photo}
-                        title={a.product}
-                        key={`item1-${a.id}`}/>
-                    )
-                  })
-                }
-              
+                { this.renderProduct(products) }
               </div>
             </div>
           </div>
