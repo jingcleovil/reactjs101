@@ -3,8 +3,7 @@ import './bootstrap.min.css';
 import Header from './common/components/Header';
 import Item from './common/components/Item';
 import CartContainer from './common/components/CartContainer';
-import products from './common/components/data/products';
-
+import { connect } from 'react-redux';
 
 class App extends Component {
 
@@ -13,14 +12,19 @@ class App extends Component {
   }
 
   onAddCart = (item) => (e) => {
-    const isExist = this.state.cart.find(fItem => {
-      return fItem.id === item.id;
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'ADD_CART',
+      item
     })
-    if(!isExist) {
-      this.setState({
-        cart: this.state.cart.concat(item)
-      })
-    }
+    // const isExist = this.state.cart.find(fItem => {
+    //   return fItem.id === item.id;
+    // })
+    // if(!isExist) {
+    //   this.setState({
+    //     cart: this.state.cart.concat(item)
+    //   })
+    // }
   }
 
   onRemoveCart = (item) => (e) => {
@@ -53,7 +57,7 @@ class App extends Component {
   }
 
   render() {
-
+    const { products } = this.props;
     return (
 
        <div>
@@ -66,7 +70,7 @@ class App extends Component {
           <div className="album py-5 bg-light">
             <div className="container">
               <div className="row">
-                { this.renderProduct(products) }
+                { this.renderProduct(products.lists) }
               </div>
             </div>
           </div>
@@ -85,4 +89,13 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  const { shop, products } = state;
+  // console.log(state);
+  return {
+    shop,
+    products
+  }
+} 
+
+export default connect(mapStateToProps)(App);
