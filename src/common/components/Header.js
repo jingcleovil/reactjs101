@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 export default class Header extends Component {
     render() {
-
         return (
             <header style={{ position: 'sticky', top: 0, zIndex: 3000}}>
               <div className="collapse bg-dark" id="navbarHeader">
