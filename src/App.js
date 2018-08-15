@@ -7,41 +7,19 @@ import { connect } from 'react-redux';
 
 class App extends Component {
 
-  state = {
-    cart: []
-  }
-
   onAddCart = (item) => (e) => {
     const { dispatch } = this.props;
     dispatch({
       type: 'ADD_CART',
       item
     })
-    // const isExist = this.state.cart.find(fItem => {
-    //   return fItem.id === item.id;
-    // })
-    // if(!isExist) {
-    //   this.setState({
-    //     cart: this.state.cart.concat(item)
-    //   })
-    // }
-  }
-
-  onRemoveCart = (item) => (e) => {
-    if(window.confirm(`Are you sure you want to delete ${item.product}?`)) {
-      this.setState({
-        cart: this.state.cart.filter(fItem => {
-          return fItem.id !== item.id;
-        })
-      })
-    }
   }
 
   renderProduct = (products) => {
     try {
       return products.map(product => {
         return (
-          <Item 
+          <Item
             onAddCart={ this.onAddCart(product) }
             data={product}
             key={`item1-${product.id}`}/>
@@ -53,20 +31,16 @@ class App extends Component {
         <div>Unable to render products. Error 500</div>
       )
     }
-    
+
   }
 
   render() {
-    const { products } = this.props;
+    const { products, shop } = this.props;
     return (
-
        <div>
-        <Header title="Album" cartCount={this.state.cart.length}/>
+        <Header title="Album" cartCount={shop.cart.length}/>
         <main role="main">
-          <CartContainer 
-            cart={this.state.cart} 
-            onRemoveCart={this.onRemoveCart}
-            />
+          <CartContainer />
           <div className="album py-5 bg-light">
             <div className="container">
               <div className="row">
@@ -89,13 +63,9 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  const { shop, products } = state;
-  // console.log(state);
-  return {
-    shop,
-    products
-  }
-} 
+const mapStateToProps = ({ shop, products }) => ({
+  shop,
+  products,
+});
 
 export default connect(mapStateToProps)(App);

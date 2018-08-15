@@ -3,19 +3,24 @@ import Item from './Item';
 import { connect } from 'react-redux';
 
 class CartContainer extends Component {
-
+    onRemoveCart = (item) => (e) => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'REMOVE_CART',
+            item
+        })
+    }
     render() {
-        const { cart } = this.props;
-
+        const { shop } = this.props;
         return (
             <section className="jumbotron text-center">
                 <div className="container">
                     <h1 className="jumbotron-heading">Cart Container</h1>
                     <div className="row">
-                        { cart.map(item => {
+                        { shop.cart.map(item => {
                             return (
-                                <Item 
-                                    onRemoveCart={ this.props.onRemoveCart(item) }
+                                <Item
+                                    onRemoveCart={ this.onRemoveCart(item) }
                                     key={`product-${Math.random()}`}
                                     data={item}/>
                             )
@@ -27,11 +32,8 @@ class CartContainer extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    // console.log(state, 'cart container');
-    return {
-
-    }
-}
+const mapStateToProps = ({ shop }) => ({
+    shop,
+});
 
 export default connect(mapStateToProps)(CartContainer);
